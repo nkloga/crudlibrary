@@ -6,7 +6,9 @@ import java.util.Optional;
 /**
  * JPA specific extension of Respository
  *
- * @author Isa Kalinsaz
+ * @author Nikolai Kloga
+ *
+ * Following desing patterns are used: abstract factory, builder
  */
 public interface CrudRepository<T> {
 
@@ -24,6 +26,18 @@ public interface CrudRepository<T> {
      * @return the entity with the given id or {@literal Optional#empty()} if none found
      * @throws IllegalArgumentException if {@code id} is {@literal null}.
      */
-    Optional<T> findById(long id);
+    T findById(long id);
+
+    /**
+     * Count amount of records
+     * @return number of records
+     */
+    long count();
+
+    int delete(int id);
+
+    int update(T updateEntity);
+
+    int create(T newEntity);
 
 }

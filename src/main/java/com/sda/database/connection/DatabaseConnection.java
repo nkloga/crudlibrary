@@ -1,10 +1,12 @@
 package com.sda.database.connection;
 
+import com.sda.database.constant.StatementType;
 import com.sda.database.property.ConnectionProperty;
 import lombok.extern.java.Log;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.rmi.NoSuchObjectException;
 import java.sql.*;
 import java.util.Properties;
 
@@ -63,5 +65,46 @@ public abstract class DatabaseConnection {
         } catch (SQLException e) {
             throw new IllegalStateException();
         }
+    }
+
+
+
+    private int executeQuery(String sql, final StatementType statementType) {
+        Statement statement = null;
+        try{
+            statement = connection.createStatement();
+            int result =  statement.executeUpdate(sql);
+            if(result > 0) {
+                // always write static content left and dynamic content right
+                if(StatementType.DELETE.equals(statementType)){
+                    log.info(result + " row is affected and deleted");
+                } else if(StatementType.INSERT.equals(statementType)){
+                    log.info(result + " row is affected and inserted");
+                } else if(StatementType.UPDATE.equals(statementType)){
+                    log.info(result + " row is affected and updated");
+                }
+                return result;
+            } else {
+                throw new NoSuchFieldException();
+            }
+        } catch (SQLException e) {
+            throw new IllegalStateException();
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    public int update(final String sql) { //final tells others that I'll not change the argument in this method
+        return executeQuery(sql,StatementType.UPDATE);
+    }
+
+    public int delete(final String sql) {
+        return executeQuery(sql, StatementType.DELETE);
+    }
+
+
+    public int create(final String sql) {
+        return executeQuery(sql, StatementType.INSERT);
     }
 }
