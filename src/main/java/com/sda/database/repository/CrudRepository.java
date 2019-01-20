@@ -25,4 +25,17 @@ public interface CrudRepository<T> {
      */
     T findById(long id);
 
+    /**
+     * Retrieves count of specified entity.
+     *
+     * @return the longr with the given id or {@literal Optional#empty()} if none found
+     * @throws IllegalArgumentException if {@code id} is {@literal null}.
+     */
+    long count();
+
+    int delete(long id);
+
+    int update(T updatedEntity);
+
+    int insert(T newEntity);
 }

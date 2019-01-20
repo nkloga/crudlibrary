@@ -64,4 +64,24 @@ public class EmployeeRepository implements CrudRepository<EmployeeEntity> {
 
         return employeeEntity;
     }
+
+    @Override
+    public long count() {
+        return 0;
+    }
+
+    @Override
+    public int delete(long id) {
+        return databaseConnection.delete("delete from Employee where id=" + id);
+    }
+
+    @Override
+    public int update(EmployeeEntity updatedEntity) {
+        return 0;
+    }
+
+    @Override
+    public int insert(EmployeeEntity newEntity) {
+        return 0;
+    }
 }

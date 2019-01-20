@@ -14,7 +14,6 @@ public class CrudExample {
 
     public static void main(String[] args) {
 
-
         DatabaseConnection mysqlDatabaseConnection = new MysqlDatabaseConnection();
         ConnectionProperty connectionProperty = mysqlDatabaseConnection.getConnectionProperties(
                 "src/main/resources/mysql.properties");
@@ -39,5 +38,9 @@ public class CrudExample {
         log.info("usage of findById");
         EmployeeEntity employeeEntity = employeeRepository.findById(5L);
         System.out.println(employeeEntity.getName() != null ? employeeEntity.toString() : "No employee found");
+
+        log.info("deleting specified employee from table");
+        employeeRepository.delete(1L);
+
     }
 }

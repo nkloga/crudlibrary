@@ -2,6 +2,7 @@ package com.sda.database.connection;
 
 import com.sda.database.property.ConnectionProperty;
 import lombok.extern.java.Log;
+import org.omg.CosNaming.NamingContextPackage.NotFound;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -63,5 +64,24 @@ public abstract class DatabaseConnection {
         } catch (SQLException e) {
             throw new IllegalStateException();
         }
+    }
+
+    public int delete(final String sql) {
+        Statement statement = null;
+        try {
+            statement = connection.createStatement();
+            int result = statement.executeUpdate(sql);
+            if (result > 0) {
+                log.info(result + " row is affected and deleted.");
+                return result;
+            } else {
+                throw new NoSuchFieldException();
+            }
+        } catch (SQLException e) {
+            throw new IllegalStateException();
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+        }
+        return 0;
     }
 }
