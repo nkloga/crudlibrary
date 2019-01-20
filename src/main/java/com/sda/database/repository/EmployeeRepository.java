@@ -77,6 +77,41 @@ public class EmployeeRepository implements CrudRepository<EmployeeEntity> {
 
     @Override
     public int update(EmployeeEntity updatedEntity) {
+        if (updatedEntity.getId() > 0) {
+            String updateStatement = "update Employee e set ";
+
+            if (updatedEntity.getName() != null) {
+                updateStatement += " e.name = '" + updatedEntity.getName() + "' ,";
+            }
+
+            if (updatedEntity.getAge() > 0) {
+
+                updateStatement += " e.age = " + updatedEntity.getAge() + " ,";
+            }
+
+            if (updatedEntity.getCity() != null) {
+
+                updateStatement += " e.city = '" + updatedEntity.getCity() + "' ,";
+            }
+
+            if (updatedEntity.getPhone() != null) {
+
+                updateStatement += " e.phone_no = '" + updatedEntity.getCity() + "' ,";
+            }
+
+            updateStatement += " where e.id=" + updatedEntity.getId();
+
+            String[] updateStatements = updateStatement.split("where");
+            String updateStatementPart = updateStatements[0];
+            String whereStatementPart = updateStatements[1];
+
+            updateStatementPart = updateStatementPart.substring(0, updateStatementPart.length() - 2);
+            String updateQuery = updateStatementPart + " where " + whereStatementPart;
+
+            databaseConnection.update(updateQuery);
+        } else {
+            throw new IllegalArgumentException("Please provide entity id in order to update entity");
+        }
         return 0;
     }
 

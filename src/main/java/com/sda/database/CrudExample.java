@@ -40,7 +40,11 @@ public class CrudExample {
         System.out.println(employeeEntity.getName() != null ? employeeEntity.toString() : "No employee found");
 
         log.info("deleting specified employee from table");
-        employeeRepository.delete(1L);
+        //employeeRepository.delete(1L);
+
+        log.info("updating specified employee from table");
+        employeeRepository.update(EmployeeEntity.builder().id(2).name("ISA KALINSAZ").city("Istanbul").age(29).build());
 
     }
+
 }
