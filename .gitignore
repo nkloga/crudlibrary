@@ -1,0 +1,24 @@
+# IDEA IDE
+*.ipr
+*.iml
+*.iws
+*.ids
+.idea/
+.idea/vcs.xml
+out/
+
+# Eclipse IDE
+.metadata/
+.settings/
+.classpath
+.factorypath
+.project
+.settings
+
+# Gradle
+gradle-app.setting
+.gradle/
+build/
+!/**/src/**/build/
+target/
+
