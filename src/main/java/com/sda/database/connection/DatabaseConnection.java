@@ -6,7 +6,6 @@ import lombok.extern.java.Log;
 
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.rmi.NoSuchObjectException;
 import java.sql.*;
 import java.util.Properties;
 
@@ -75,7 +74,6 @@ public abstract class DatabaseConnection {
             statement = connection.createStatement();
             int result =  statement.executeUpdate(sql);
             if(result > 0) {
-                // always write static content left and dynamic content right
                 if(StatementType.DELETE.equals(statementType)){
                     log.info(result + " row is affected and deleted");
                 } else if(StatementType.INSERT.equals(statementType)){
@@ -95,7 +93,7 @@ public abstract class DatabaseConnection {
         return 0;
     }
 
-    public int update(final String sql) { //final tells others that I'll not change the argument in this method
+    public int update(final String sql) {
         return executeQuery(sql,StatementType.UPDATE);
     }
 

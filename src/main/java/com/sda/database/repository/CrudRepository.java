@@ -1,7 +1,6 @@
 package com.sda.database.repository;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * JPA specific extension of Respository

@@ -1,6 +1,7 @@
 package com.sda.database.repository;
 
 import com.sda.database.connection.DatabaseConnection;
+import com.sda.database.connection.MysqlDatabaseConnection;
 import com.sda.database.entity.EmployeeEntity;
 import lombok.RequiredArgsConstructor;
 
@@ -67,7 +68,16 @@ public class EmployeeRepository implements CrudRepository<EmployeeEntity> {
 
     @Override
     public long count() {
-        return 0;
+        long result = 0;
+        ResultSet resultSet = databaseConnection.read("select count(id) from employee");
+        try {
+            while(resultSet.next()) {
+                result = resultSet.getInt("count(id)");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return result;
     }
 
     @Override
@@ -77,80 +87,72 @@ public class EmployeeRepository implements CrudRepository<EmployeeEntity> {
     }
 
     @Override
-    public int update(EmployeeEntity updateEntity) {
-        if (updateEntity.getId() > 0) {
+    public int update(EmployeeEntity updatedEntity) {
+        if (updatedEntity.getId() > 0) {
             String updateStatement = "update Employee e set ";
 
-            if (updateEntity.getName() != null) {
-                updateStatement += " e.name = '" + updateEntity.getName() + "' ,";
+            if (updatedEntity.getName() != null) {
+                updateStatement += " e.name = '" + updatedEntity.getName() + "' ,";
             }
 
-            if (updateEntity.getAge() > 0) {
-                updateStatement += " e.age = '" + updateEntity.getAge() + "' ,";
+            if (updatedEntity.getAge() > 0) {
+
+                updateStatement += " e.age = " + updatedEntity.getAge() + " ,";
             }
 
-            if (updateEntity.getCity() != null) {
-                updateStatement += " e.city = '" + updateEntity.getCity() + "' ,";
+            if (updatedEntity.getCity() != null) {
+
+                updateStatement += " e.city = '" + updatedEntity.getCity() + "' ,";
             }
 
-            if (updateEntity.getPhone() != null) {
-                updateStatement += " e.phone_no = '" + updateEntity.getPhone() + "' ,";
+            if (updatedEntity.getPhone() != null) {
+
+                updateStatement += " e.phone_no = '" + updatedEntity.getCity() + "' ,";
             }
+
+            updateStatement += " where e.id=" + updatedEntity.getId();
 
             String[] updateStatements = updateStatement.split("where");
             String updateStatementPart = updateStatements[0];
             String whereStatementPart = updateStatements[1];
 
-            int indexOfRedundandComma = 0;
+            updateStatementPart = updateStatementPart.substring(0, updateStatementPart.length() - 2);
+            String updateQuery = updateStatementPart + " where " + whereStatementPart;
 
-            for (int i = updateStatementPart.length()-1; i > 0 ; i--) {
-             //   if(updateStatementPart.charAt(i);
-            }
-
-            updateStatement += " where e.id=" + updateEntity.getId();
+            databaseConnection.update(updateQuery);
         } else {
             throw new IllegalArgumentException("Please provide entity id in order to update entity");
         }
         return 0;
     }
-    //
-// @Override
-//    public int update(EmployeeEntity updateEntity) {
-//        if (updateEntity.getId() > 0) {
-//            String updateStatement = "update Employee e set ";
-//
-//            boolean isPreviousStatementExecuted = true;
-//            if (updateEntity.getName() != null) {
-//                updateStatement += " e.name = '" + updateEntity.getName() + "'";
-//            } else {
-//                isPreviousStatementExecuted = false;
-//            }
-//
-//            if (updateEntity.getAge() > 0) {
-//                if (isPreviousStatementExecuted) {
-//                    updateStatement += ", e.name = " + updateEntity.getAge();
-//                } else {
-//                    updateStatement += " e.age = " + updateEntity.getAge() + "";
-//                }
-//            }
-//            updateStatement = updateStatement + " where e.id=" + updateEntity.getId();
-//        } else {
-//            throw new IllegalArgumentException("Please provide entity id in order to update entity");
-//        }
-//        return 0;
-//    }
 
     @Override
     public int create(EmployeeEntity newEntity) {
+
+        String updateStatement = "insert into employee values(default, ";
+
+        if (newEntity.getName() != null) {
+            updateStatement += " '" + newEntity.getName() + "' ,";
+        }
+
+        if (newEntity.getAge() > 0) {
+
+            updateStatement += " " + newEntity.getAge() + " ,";
+        }
+
+        if (newEntity.getCity() != null) {
+
+            updateStatement += " '" + newEntity.getCity() + "' ,";
+        }
+
+        if (newEntity.getPhone() != null) {
+
+            updateStatement += " '" + newEntity.getPhone() + "' ,";
+        }
+
+        String updateQuery = updateStatement.substring(0, updateStatement.length() - 2) + ")";
+
+        databaseConnection.create(updateQuery);
         return 0;
     }
-
-    //TEST
-
-    public static void main(String[] args) {
-        EmployeeRepository employeeRepository = new EmployeeRepository(null);
-        employeeRepository.update(EmployeeEntity.builder().id(7).age(20).name("Isa").city("Istambul").build());
-    }
-
-
 }
