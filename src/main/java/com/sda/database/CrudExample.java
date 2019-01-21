@@ -2,6 +2,7 @@ package com.sda.database;
 
 import com.sda.database.connection.DatabaseConnection;
 import com.sda.database.connection.MysqlDatabaseConnection;
+import com.sda.database.constant.DatabaseType;
 import com.sda.database.entity.EmployeeEntity;
 import com.sda.database.property.ConnectionProperty;
 import com.sda.database.repository.EmployeeRepository;
@@ -16,8 +17,7 @@ public class CrudExample {
 
 
         DatabaseConnection mysqlDatabaseConnection = new MysqlDatabaseConnection();
-        ConnectionProperty connectionProperty = mysqlDatabaseConnection.getConnectionProperties(
-                "src/main/resources/mysql.properties");
+        ConnectionProperty connectionProperty = mysqlDatabaseConnection.getConnectionProperties(DatabaseType.MYSQL);
 
         System.out.println(
                 String.format("Driver Name: %s , Database Name: %s, Username: %s, Password: ... ",

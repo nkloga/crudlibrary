@@ -1,5 +1,6 @@
 package com.sda.database.connection;
 
+import com.sda.database.constant.DatabaseType;
 import com.sda.database.constant.StatementType;
 import com.sda.database.property.ConnectionProperty;
 import lombok.extern.java.Log;
@@ -14,9 +15,22 @@ public abstract class DatabaseConnection {
 
     private Connection connection = null;
 
-    public ConnectionProperty getConnectionProperties(final String fileName) {
-
+    public ConnectionProperty getConnectionProperties(final DatabaseType databaseType) {
         Properties properties = new Properties();
+        String fileName = "";
+        try {
+            if (DatabaseType.MYSQL.equals(databaseType)) {
+                fileName = "src/main/resources/mysql.properties";
+            } else if (DatabaseType.ORACLE.equals(databaseType)) {
+                fileName = "src/main/resources/oracle.properties";
+            } else if (DatabaseType.H2.equals(databaseType)) {
+                fileName = "src/main/resources/h2.properties";
+            } else {
+                throw new NoSuchFieldException();
+            }
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+        }
 
         try (FileInputStream fileInputStream = new FileInputStream(fileName)) {
             properties.load(fileInputStream);
@@ -67,18 +81,17 @@ public abstract class DatabaseConnection {
     }
 
 
-
     private int executeQuery(String sql, final StatementType statementType) {
         Statement statement = null;
-        try{
+        try {
             statement = connection.createStatement();
-            int result =  statement.executeUpdate(sql);
-            if(result > 0) {
-                if(StatementType.DELETE.equals(statementType)){
+            int result = statement.executeUpdate(sql);
+            if (result > 0) {
+                if (StatementType.DELETE.equals(statementType)) {
                     log.info(result + " row is affected and deleted");
-                } else if(StatementType.INSERT.equals(statementType)){
+                } else if (StatementType.INSERT.equals(statementType)) {
                     log.info(result + " row is affected and inserted");
-                } else if(StatementType.UPDATE.equals(statementType)){
+                } else if (StatementType.UPDATE.equals(statementType)) {
                     log.info(result + " row is affected and updated");
                 }
                 return result;
@@ -94,7 +107,7 @@ public abstract class DatabaseConnection {
     }
 
     public int update(final String sql) {
-        return executeQuery(sql,StatementType.UPDATE);
+        return executeQuery(sql, StatementType.UPDATE);
     }
 
     public int delete(final String sql) {
